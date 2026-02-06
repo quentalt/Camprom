@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
-import {Camera} from '../models/camera.model';
+import { Camera } from '../models/camera.model';
 
 @Component({
   selector: 'app-camera-card',
@@ -24,85 +24,88 @@ import {Camera} from '../models/camera.model';
   ],
   template: `
     <mat-card
-      class="camera-card"
-      [class.on-sale]="camera.isOnSale"
+      class="cursor-pointer transition-all duration-300 ease-in-out rounded-2xl overflow-hidden h-full flex flex-col relative hover:shadow-2xl hover:-translate-y-2"
+      [class.ring-2]="camera.isOnSale"
+      [class.ring-teal-600]="camera.isOnSale"
       matRipple
       (click)="viewDetails()">
 
       <!-- Image container -->
-      <div class="image-container">
+      <div class="relative h-52 overflow-hidden bg-gray-100">
         <img
           mat-card-image
           [src]="camera.image"
           [alt]="camera.name"
-          class="camera-image">
+          class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
 
-        <!-- Sale badge -->
+        <!-- Sale badge (badge rouge) -->
         @if (camera.isOnSale) {
-          <mat-chip class="sale-badge" color="accent">
+          <span class="absolute top-3 left-3 inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-bold text-red-700 ring-1 ring-inset ring-red-600/10 uppercase tracking-wide animate-pulse">
             {{ camera.saleLabel }}
-          </mat-chip>
+          </span>
         }
 
         <!-- Rating badge -->
-        <div class="rating-badge">
-          <mat-icon class="star-icon">star</mat-icon>
+        <div class="absolute top-3 right-3 bg-black/80 text-white px-2 py-1 rounded-xl flex items-center gap-1 text-xs font-semibold">
+          <mat-icon class="!text-base !w-4 !h-4 text-yellow-400">star</mat-icon>
           <span>{{ camera.rating }}</span>
         </div>
       </div>
 
       <!-- Card content -->
-      <mat-card-content>
+      <mat-card-content class="p-4 flex-1 flex flex-col">
         <!-- Brand -->
-        <div class="brand-label">
+        <div class="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1">
           {{ camera.brand }}
         </div>
 
         <!-- Camera name -->
-        <mat-card-title class="camera-name">
+        <mat-card-title class="!text-lg !font-bold text-gray-900 mb-3 leading-snug">
           {{ camera.name }}
         </mat-card-title>
 
         <!-- Specs chips -->
-        <div class="specs-container">
+        <div class="mb-4">
           <mat-chip-set>
-            <mat-chip class="spec-chip">
-              <mat-icon matChipAvatar>photo_camera</mat-icon>
+            <mat-chip class="!text-xs !font-semibold !h-7">
+              <mat-icon matChipAvatar class="!text-lg !w-[18px] !h-[18px]">photo_camera</mat-icon>
               {{ camera.megapixels }}MP
             </mat-chip>
-            <mat-chip class="spec-chip">
-              <mat-icon matChipAvatar>category</mat-icon>
+            <mat-chip class="!text-xs !font-semibold !h-7">
+              <mat-icon matChipAvatar class="!text-lg !w-[18px] !h-[18px]">category</mat-icon>
               {{ camera.type }}
             </mat-chip>
           </mat-chip-set>
         </div>
 
         <!-- Features -->
-        <div class="features-list">
+        <div class="mb-4 flex-1">
           @for (feature of camera.features.slice(0, 2); track feature) {
-            <div class="feature-item">
-              <mat-icon class="feature-icon">check_circle</mat-icon>
+            <div class="flex items-start gap-2 mb-1.5 text-gray-700 text-sm leading-relaxed">
+              <mat-icon class="!text-lg !w-[18px] !h-[18px] text-green-500 flex-shrink-0 mt-0.5">
+                check_circle
+              </mat-icon>
               <span>{{ feature }}</span>
             </div>
           }
         </div>
 
         <!-- Pricing -->
-        <div class="pricing-container">
-          <div class="price-wrapper">
-            <span class="current-price">
+        <div class="flex items-center justify-between gap-2 flex-wrap mb-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-2xl font-black text-blue-600">
               {{ camera.price | currency:'EUR':'symbol':'1.0-0' }}
             </span>
 
             @if (camera.originalPrice) {
-              <span class="original-price">
+              <span class="text-base text-gray-400 line-through">
                 {{ camera.originalPrice | currency:'EUR':'symbol':'1.0-0' }}
               </span>
             }
           </div>
 
           @if (camera.discount) {
-            <mat-chip class="discount-chip" color="warn">
+            <mat-chip color="warn" class="!font-bold !text-xs">
               -{{ camera.discount }}%
             </mat-chip>
           }
@@ -110,64 +113,16 @@ import {Camera} from '../models/camera.model';
       </mat-card-content>
 
       <!-- Card actions -->
-      <mat-card-actions>
-        <button mat-raised-button color="primary" class="view-button">
-          <mat-icon>visibility</mat-icon>
+      <mat-card-actions class="!p-4 !pt-0 !m-0">
+        <button mat-raised-button color="primary" class="!w-full !font-semibold">
+          <mat-icon class="mr-2">visibility</mat-icon>
           Voir les détails
         </button>
       </mat-card-actions>
     </mat-card>
   `,
   styles: [`
-    .camera-card {
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 16px;
-      overflow: hidden;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .camera-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .camera-card.on-sale {
-      border: 2px solid #00897b;
-    }
-
-    .image-container {
-      position: relative;
-      height: 200px;
-      overflow: hidden;
-      background-color: #f5f5f5;
-    }
-
-    .camera-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .camera-card:hover .camera-image {
-      transform: scale(1.05);
-    }
-
-    .sale-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.5px;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
+    /* Animation pulse personnalisée pour le badge */
     @keyframes pulse {
       0%, 100% {
         opacity: 1;
@@ -177,137 +132,8 @@ import {Camera} from '../models/camera.model';
       }
     }
 
-    .rating-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .star-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      color: #ffc107;
-    }
-
-    mat-card-content {
-      padding: 16px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-label {
-      color: #757575;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-
-    .camera-name {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: #212121;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    .specs-container {
-      margin-bottom: 16px;
-    }
-
-    .spec-chip {
-      font-size: 0.75rem;
-      font-weight: 600;
-      height: 28px;
-    }
-
-    .spec-chip mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    .features-list {
-      margin-bottom: 16px;
-      flex: 1;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 6px;
-      color: #616161;
-      font-size: 0.875rem;
-      line-height: 1.5;
-    }
-
-    .feature-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      color: #4caf50;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .pricing-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .price-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .current-price {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #1976d2;
-    }
-
-    .original-price {
-      font-size: 1rem;
-      color: #9e9e9e;
-      text-decoration: line-through;
-    }
-
-    .discount-chip {
-      font-weight: 700;
-      font-size: 0.75rem;
-    }
-
-    mat-card-actions {
-      padding: 0 16px 16px;
-      margin: 0;
-    }
-
-    .view-button {
-      width: 100%;
-      font-weight: 600;
-    }
-
-    .view-button mat-icon {
-      margin-right: 8px;
+    .animate-pulse {
+      animation: pulse 2s ease-in-out infinite;
     }
   `]
 })

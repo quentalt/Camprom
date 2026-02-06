@@ -1,4 +1,3 @@
-// `src/app/camera-list/camera-list.component.ts`
 import { Component, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Camera } from '../models/camera.model';
@@ -6,8 +5,8 @@ import { CameraService } from '../services/camera.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import {FilterOptions, SidebarComponent} from '../sidebar/sidebar';
-import {CameraCardComponent} from '../camera-card/camera-card';
+import { FilterOptions, SidebarComponent } from '../sidebar/sidebar';
+import { CameraCardComponent } from '../camera-card/camera-card';
 
 @Component({
   selector: 'app-camera-list',
@@ -22,37 +21,49 @@ import {CameraCardComponent} from '../camera-card/camera-card';
   ],
   template: `
     <app-sidebar (filtersChanged)="onFiltersChanged($event)">
-      <div class="camera-list-container">
-        <div class="content-wrapper">
-          <div class="header">
-            <h1>
-              <mat-icon>photo_camera</mat-icon>
+      <div class="p-8 min-h-screen md:p-4">
+        <div class="max-w-screen-2xl mx-auto">
+          <!-- Header -->
+          <div class="mb-8">
+            <h1 class="flex items-center gap-3 text-4xl font-bold text-gray-900 mb-2">
+              <mat-icon class="!text-4xl !w-8 !h-8 text-blue-600">photo_camera</mat-icon>
               Appareils Photo
             </h1>
-            <p class="subtitle">Découvrez notre sélection d'appareils photo professionnels</p>
+            <p class="text-base text-gray-600">
+              Découvrez notre sélection d'appareils photo professionnels
+            </p>
           </div>
 
+          <!-- Loading Spinner -->
           @if (isLoading()) {
-            <div class="loading-container">
+            <div class="flex justify-center items-center min-h-96">
               <mat-spinner diameter="60"></mat-spinner>
             </div>
           }
 
-          <div class="camera-grid" [class.hidden]="isLoading()">
+          <!-- Camera Grid -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-300"
+            [class.opacity-0]="isLoading()">
             @for (camera of filteredCameras(); track camera.id) {
               <app-camera-card
                 [camera]="camera"
-                class="camera-card-item">
+                class="animate-fade-in-up">
               </app-camera-card>
             }
           </div>
 
+          <!-- Empty State -->
           @if (filteredCameras().length === 0 && !isLoading()) {
-            <mat-card class="empty-state">
+            <mat-card class="mt-8 py-20 px-8 text-center bg-white">
               <mat-card-content>
-                <mat-icon class="empty-icon">search_off</mat-icon>
-                <h3 class="empty-title">Aucun appareil trouvé</h3>
-                <p class="empty-description">
+                <mat-icon class="!text-6xl !w-16 !h-16 text-gray-400 mx-auto mb-6">
+                  search_off
+                </mat-icon>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">
+                  Aucun appareil trouvé
+                </h3>
+                <p class="text-base text-gray-600 m-0">
                   Essayez de modifier vos filtres pour voir plus de résultats.
                 </p>
               </mat-card-content>
@@ -63,93 +74,7 @@ import {CameraCardComponent} from '../camera-card/camera-card';
     </app-sidebar>
   `,
   styles: [`
-    .camera-list-container {
-      padding: 2rem;
-      min-height: 100vh;
-    }
-
-    .content-wrapper {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .header {
-      margin-bottom: 2rem;
-    }
-
-    .header h1 {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #212121;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .header mat-icon {
-      font-size: 2rem;
-      width: 2rem;
-      height: 2rem;
-      color: #1976d2;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #757575;
-      margin: 0;
-    }
-
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 400px;
-    }
-
-    .camera-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .camera-grid.hidden {
-      opacity: 0;
-    }
-
-    .camera-card-item {
-      animation: fadeInUp 0.6s ease-out both;
-    }
-
-    .empty-state {
-      margin-top: 2rem;
-      padding: 5rem 2rem;
-      text-align: center;
-      background: white;
-    }
-
-    .empty-icon {
-      font-size: 4rem;
-      width: 4rem;
-      height: 4rem;
-      color: #9e9e9e;
-      margin: 0 auto 1.5rem;
-    }
-
-    .empty-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #212121;
-      margin-bottom: 0.75rem;
-    }
-
-    .empty-description {
-      font-size: 1rem;
-      color: #757575;
-      margin: 0;
-    }
-
+    /* Animation personnalisée pour fadeInUp */
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -161,14 +86,8 @@ import {CameraCardComponent} from '../camera-card/camera-card';
       }
     }
 
-    @media (max-width: 768px) {
-      .camera-list-container {
-        padding: 1rem;
-      }
-
-      .camera-grid {
-        grid-template-columns: 1fr;
-      }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.6s ease-out both;
     }
   `]
 })
@@ -204,8 +123,6 @@ export class CameraListComponent implements OnInit {
   private applyFilters(filters: FilterOptions) {
     this.isLoading.set(true);
 
-    // Appliquer les filtres côté client pour l'instant
-    // Plus tard, vous pourrez envoyer ces filtres à l'API
     this.cameraService.getCameras().subscribe(cameras => {
       let filtered = cameras;
 

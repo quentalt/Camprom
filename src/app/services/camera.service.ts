@@ -51,11 +51,15 @@ export class CameraService {
     );
   }
 
-  filterCameras(brand: string = '', sortBy: string = 'name'): Observable<Camera[]> {
+  filterCameras(brand?: string, sortBy?: string): Observable<Camera[]> {
     this.isLoading.set(true);
-    const params: any = {};
-    if (brand) params.brand = brand;
-    if (sortBy) params.sortBy = sortBy;
+    let params: any = {};
+    if (brand) {
+      params.brand = brand;
+    }
+    if (sortBy) {
+      params.sortBy = sortBy;
+    }
 
     return this.http.get<Camera[]>(`${this.apiUrl}/filter/search`, { params }).pipe(
       tap(cameras => {

@@ -27,123 +27,129 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatBadgeModule
   ],
   template: `
-    <div class="detail-container">
+    <div class="min-h-screen bg-gray-100 py-8">
       @if (isLoading()) {
-        <div class="loading-container">
+        <div class="flex justify-center items-center min-h-[60vh]">
           <mat-spinner diameter="60"></mat-spinner>
         </div>
       }
 
       @if (!isLoading() && camera()) {
-        <div class="detail-content">
+        <div class="max-w-7xl mx-auto px-5">
           <!-- Breadcrumb / Back button -->
-          <div class="breadcrumb">
-            <button mat-button (click)="goBack()" class="back-button">
-              <mat-icon>arrow_back</mat-icon>
+          <div class="mb-6">
+            <button mat-button (click)="goBack()" class="!flex !items-center !gap-2 !text-blue-600 !font-medium">
+              <mat-icon class="!text-xl !w-5 !h-5">arrow_back</mat-icon>
               Retour à la liste
             </button>
           </div>
 
           <!-- Main content -->
-          <mat-card class="camera-detail-card">
-            <div class="detail-grid">
+          <mat-card class="mb-8 overflow-visible">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <!-- Image Section -->
-              <div class="image-section">
-                <div class="image-container">
+              <div class="md:sticky md:top-8 h-fit z-0">
+                <div class="relative rounded-xl overflow-hidden bg-gray-100 aspect-square">
                   <img
                     [src]="camera()!.image"
                     [alt]="camera()!.name"
-                    class="camera-image">
+                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
 
                   @if (camera()!.isOnSale) {
-                    <mat-chip class="sale-badge" color="accent">
+                    <span class="absolute top-4 left-4 inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-sm font-bold text-red-700 ring-1 ring-inset ring-red-600/10 uppercase tracking-wide z-10">
                       {{ camera()!.saleLabel }}
-                    </mat-chip>
+                    </span>
                   }
 
-                  <div class="rating-badge">
-                    <mat-icon class="star-icon">star</mat-icon>
-                    <span class="rating-value">{{ camera()!.rating }}</span>
+                  <div class="absolute top-4 right-4 bg-black/80 text-white px-3 py-2 rounded-xl flex items-center gap-2 font-semibold z-10">
+                    <mat-icon class="!text-xl !w-5 !h-5 text-yellow-400">star</mat-icon>
+                    <span class="text-base">{{ camera()!.rating }}</span>
                   </div>
                 </div>
               </div>
 
               <!-- Info Section -->
-              <div class="info-section">
+              <div class="flex flex-col relative z-10">
                 <mat-card-content>
                   <!-- Brand -->
-                  <div class="brand-label">{{ camera()!.brand }}</div>
+                  <div class="text-gray-600 text-sm font-semibold uppercase tracking-wider mb-2">
+                    {{ camera()!.brand }}
+                  </div>
 
                   <!-- Title -->
-                  <h1 class="camera-title">{{ camera()!.name }}</h1>
+                  <h1 class="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                    {{ camera()!.name }}
+                  </h1>
 
                   <!-- Specs chips -->
-                  <div class="specs-container">
+                  <div class="mb-6">
                     <mat-chip-set>
-                      <mat-chip class="spec-chip">
-                        <mat-icon matChipAvatar>photo_camera</mat-icon>
+                      <mat-chip class="!font-semibold">
+                        <mat-icon matChipAvatar class="!text-xl !w-5 !h5-">photo_camera</mat-icon>
                         {{ camera()!.megapixels }} MP
                       </mat-chip>
-                      <mat-chip class="spec-chip">
-                        <mat-icon matChipAvatar>category</mat-icon>
+                      <mat-chip class="!font-semibold">
+                        <mat-icon matChipAvatar class="!text-xl !w-5 !h-5">category</mat-icon>
                         {{ camera()!.type }}
                       </mat-chip>
-                      <mat-chip class="spec-chip">
-                        <mat-icon matChipAvatar>star</mat-icon>
+                      <mat-chip class="!font-semibold">
+                        <mat-icon matChipAvatar class="!text-xl !w-5 !h-5">star</mat-icon>
                         {{ camera()!.rating }} / 5
                       </mat-chip>
                     </mat-chip-set>
                   </div>
 
-                  <mat-divider></mat-divider>
+                  <mat-divider class="!my-6"></mat-divider>
 
                   <!-- Features -->
-                  <div class="features-section">
-                    <h3 class="section-title">
-                      <mat-icon>check_circle</mat-icon>
+                  <div class="mb-6">
+                    <h3 class="flex items-center gap-2 text-xl font-semibold text-gray-900 mb-4">
+                      <mat-icon class="text-blue-600 !flex-shrink-0">check_circle</mat-icon>
                       Caractéristiques principales
                     </h3>
-                    <div class="features-list">
+                    <div class="flex flex-col gap-3">
                       @for (feature of camera()!.features; track feature) {
-                        <div class="feature-item">
-                          <mat-icon class="feature-icon">done</mat-icon>
+                        <div class="flex items-start gap-3 text-gray-800 text-base leading-relaxed">
+                          <mat-icon class="!text-xl !w-5 !h-5 text-green-500 flex-shrink-0 mt-0.5">
+                            done
+                          </mat-icon>
                           <span>{{ feature }}</span>
                         </div>
                       }
                     </div>
                   </div>
 
-                  <mat-divider></mat-divider>
+                  <mat-divider class="!my-6"></mat-divider>
 
                   <!-- Pricing -->
-                  <div class="pricing-section">
-                    <h3 class="section-title">
-                      <mat-icon>euro</mat-icon>
+                  <div class="mb-6">
+                    <h3 class="flex items-center gap-2 text-xl font-semibold text-gray-900 mb-4">
+                      <mat-icon class="text-blue-600 !flex-shrink-0">euro</mat-icon>
                       Prix
                     </h3>
-                    <div class="price-container">
-                      <div class="price-wrapper">
-                        <span class="current-price">
+                    <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
+                      <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-5xl font-black text-blue-600 leading-none">
                           {{ camera()!.price | currency:'EUR':'symbol':'1.0-0' }}
                         </span>
 
                         @if (camera()!.originalPrice) {
-                          <span class="original-price">
+                          <span class="text-2xl text-gray-400 line-through">
                             {{ camera()!.originalPrice | currency:'EUR':'symbol':'1.0-0' }}
                           </span>
                         }
                       </div>
 
                       @if (camera()!.discount) {
-                        <mat-chip class="discount-chip" color="warn">
+                        <mat-chip color="warn" class="!font-bold !text-sm">
                           -{{ camera()!.discount }}% d'économie
                         </mat-chip>
                       }
                     </div>
 
                     @if (camera()!.discount && camera()!.originalPrice) {
-                      <div class="savings-info">
-                        <mat-icon class="savings-icon">savings</mat-icon>
+                      <div class="flex items-center gap-2 p-3 bg-green-50 rounded-lg text-green-800 font-semibold">
+                        <mat-icon class="!text-xl !w-5 !h-5 text-green-500 !flex-shrink-0">savings</mat-icon>
                         <span>
                           Vous économisez {{ camera()!.originalPrice! - camera()!.price | currency:'EUR':'symbol':'1.0-0' }}
                         </span>
@@ -151,18 +157,14 @@ import { MatBadgeModule } from '@angular/material/badge';
                     }
                   </div>
 
-                  <mat-divider></mat-divider>
+                  <mat-divider class="!my-6"></mat-divider>
 
                   <!-- Actions -->
-                  <div class="actions-section">
-                    <button mat-raised-button color="accent" class="action-button">
-                      <mat-icon>favorite</mat-icon>
+                  <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button mat-raised-button color="accent" class="!flex-1 !py-3 !px-6 !font-semibold !text-base">
+                      <mat-icon class="!mr-2">favorite</mat-icon>
                       Ajouter aux favoris
                     </button>
-                  <!--  <button mat-stroked-button class="action-button">
-                      <mat-icon>share</mat-icon>
-                      Partager
-                    </button>-->
                   </div>
                 </mat-card-content>
               </div>
@@ -172,11 +174,13 @@ import { MatBadgeModule } from '@angular/material/badge';
       }
 
       @if (!isLoading() && !camera()) {
-        <mat-card class="error-card">
+        <mat-card class="mx-auto my-8 max-w-2xl text-center p-12">
           <mat-card-content>
-            <mat-icon class="error-icon">error_outline</mat-icon>
-            <h2>Appareil photo non trouvé</h2>
-            <p>L'appareil photo que vous recherchez n'existe pas ou a été supprimé.</p>
+            <mat-icon class="!text-6xl !w-16 !h-16 text-red-500 mx-auto mb-4">error_outline</mat-icon>
+            <h2 class="text-3xl font-bold text-gray-900 mb-3">Appareil photo non trouvé</h2>
+            <p class="text-base text-gray-600 mb-6">
+              L'appareil photo que vous recherchez n'existe pas ou a été supprimé.
+            </p>
             <button mat-raised-button color="primary" (click)="goBack()">
               Retour à la liste
             </button>
@@ -185,378 +189,7 @@ import { MatBadgeModule } from '@angular/material/badge';
       }
     </div>
   `,
-  styles: [`
-    .detail-container {
-      min-height: 100vh;
-      background-color: #f5f5f5;
-      padding: 2rem 0;
-    }
-
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 60vh;
-    }
-
-    .detail-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-    }
-
-    .breadcrumb {
-      margin-bottom: 1.5rem;
-    }
-
-    .back-button {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #1976d2;
-      font-weight: 500;
-    }
-
-    .back-button mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    .camera-detail-card {
-      margin-bottom: 2rem;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    @media (min-width: 768px) {
-      .detail-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    /* Image Section */
-    .image-section {
-      position: sticky;
-      top: 2rem;
-      height: fit-content;
-    }
-
-    .image-container {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      background-color: #f5f5f5;
-      aspect-ratio: 1;
-    }
-
-    .camera-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .camera-image:hover {
-      transform: scale(1.05);
-    }
-
-    .sale-badge {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.875rem;
-      letter-spacing: 0.5px;
-      z-index: 2;
-    }
-
-    .rating-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 0.5rem 0.75rem;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      z-index: 2;
-    }
-
-    .star-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-      color: #ffc107;
-    }
-
-    .rating-value {
-      font-size: 1rem;
-    }
-
-    /* Info Section */
-    .info-section {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-label {
-      color: #757575;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.5rem;
-    }
-
-    .camera-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #212121;
-      margin: 0 0 1.5rem 0;
-      line-height: 1.2;
-    }
-
-    .specs-container {
-      margin-bottom: 1.5rem;
-    }
-
-    .spec-chip {
-      font-weight: 600;
-    }
-
-    .spec-chip mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    mat-divider {
-      margin: 1.5rem 0;
-    }
-
-    /* Sections */
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #212121;
-      margin: 0 0 1rem 0;
-    }
-
-    .section-title mat-icon {
-      color: #1976d2;
-    }
-
-    /* Features */
-    .features-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .features-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      color: #424242;
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .feature-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-      color: #4caf50;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* Pricing */
-    .pricing-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .price-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
-    .price-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .current-price {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #1976d2;
-      line-height: 1;
-    }
-
-    .original-price {
-      font-size: 1.5rem;
-      color: #9e9e9e;
-      text-decoration: line-through;
-    }
-
-    .discount-chip {
-      font-weight: 700;
-      font-size: 0.875rem;
-    }
-
-    .savings-info {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem;
-      background-color: #e8f5e9;
-      border-radius: 8px;
-      color: #2e7d32;
-      font-weight: 600;
-    }
-
-    .savings-icon {
-      color: #4caf50;
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    /* Actions */
-    .actions-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    @media (min-width: 640px) {
-      .actions-section {
-        flex-direction: row;
-      }
-    }
-
-    .action-button {
-      flex: 1;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .action-button mat-icon {
-      margin-right: 0.5rem;
-    }
-
-    /* Additional Info Card */
-    .additional-info-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .additional-info-card mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: white;
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (min-width: 640px) {
-      .info-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .info-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    .info-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .info-item mat-icon {
-      font-size: 2rem;
-      width: 2rem;
-      height: 2rem;
-      color: #ffd700;
-      flex-shrink: 0;
-    }
-
-    .info-item strong {
-      display: block;
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .info-item p {
-      margin: 0;
-      font-size: 0.875rem;
-      opacity: 0.9;
-    }
-
-    /* Error Card */
-    .error-card {
-      margin: 2rem auto;
-      max-width: 600px;
-      text-align: center;
-      padding: 3rem 2rem;
-    }
-
-    .error-icon {
-      font-size: 4rem;
-      width: 4rem;
-      height: 4rem;
-      color: #f44336;
-      margin: 0 auto 1rem;
-    }
-
-    .error-card h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #212121;
-      margin-bottom: 0.75rem;
-    }
-
-    .error-card p {
-      font-size: 1rem;
-      color: #757575;
-      margin-bottom: 1.5rem;
-    }
-  `]
+  styles: []
 })
 export class CameraDetailsComponent implements OnInit {
   camera = signal<Camera | null>(null);

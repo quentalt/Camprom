@@ -21,30 +21,38 @@ import { MatListModule } from '@angular/material/list';
     MatListModule
   ],
   template: `
-    <mat-toolbar color="primary" class="navbar">
+    <mat-toolbar color="primary" class="sticky top-0 z-[1000] flex items-center">
       <!-- Mobile Hamburger -->
-      <button mat-icon-button class="mobile-menu-button" (click)="toggleSidenav()">
+      <button
+        mat-icon-button
+        class="md:!hidden"
+        (click)="toggleSidenav()">
         <mat-icon>menu</mat-icon>
       </button>
 
       <!-- Logo / Title -->
-<!--      <span class="logo">MonSite</span>-->
+      <!-- <span class="text-2xl font-bold">MonSite</span> -->
 
       <!-- Spacer -->
-      <span class="spacer"></span>
+      <span class="flex-1"></span>
 
       <!-- Desktop Links -->
-      <nav class="desktop-links">
+      <nav class="hidden md:flex items-center gap-2">
         <button mat-button>À propos</button>
       </nav>
 
-      <!-- Icons -->
+      <!-- Icons (si nécessaire) -->
+      <!-- <div class="flex items-center gap-1 ml-2">
+        <button mat-icon-button>
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </div> -->
     </mat-toolbar>
 
-    <!-- Account Menu -->
+    <!-- Account Menu (si nécessaire) -->
 
     <!-- Sidenav for Mobile -->
-    <mat-sidenav-container class="mobile-sidenav-container">
+    <mat-sidenav-container class="absolute top-0 left-0 w-full h-0 z-[999]">
       <mat-sidenav
         #sidenav
         mode="over"
@@ -58,55 +66,7 @@ import { MatListModule } from '@angular/material/list';
       <mat-sidenav-content></mat-sidenav-content>
     </mat-sidenav-container>
   `,
-  styles: [`
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-
-    .desktop-links button {
-      margin-right: 0.5rem;
-    }
-
-    .icons button {
-      margin-left: 0.25rem;
-    }
-
-    /* Mobile */
-    .mobile-menu-button {
-      display: none;
-    }
-
-    @media (max-width: 768px) {
-      .desktop-links {
-        display: none;
-      }
-      .mobile-menu-button {
-        display: inline-flex;
-      }
-    }
-
-    .mobile-sidenav-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 0;
-      z-index: 999;
-    }
-  `]
+  styles: []
 })
 export class NavbarComponent {
   isSidenavOpen = signal(false);
