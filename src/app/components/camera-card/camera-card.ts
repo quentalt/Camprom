@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
-import { Camera } from '../models/camera.model';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Camera } from '../../models/camera.model';
+import { FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-camera-card',
@@ -20,7 +22,8 @@ import { Camera } from '../models/camera.model';
     MatIconModule,
     MatBadgeModule,
     MatButtonModule,
-    MatRippleModule
+    MatRippleModule,
+    MatTooltipModule
   ],
   template: `
     <mat-card
@@ -50,6 +53,19 @@ import { Camera } from '../models/camera.model';
           <mat-icon class="!text-base !w-4 !h-4 text-yellow-400">star</mat-icon>
           <span>{{ camera.rating }}</span>
         </div>
+
+        <!-- Favorite button -->
+        <button
+          mat-mini-fab
+          [color]="isFavorite() ? 'warn' : 'default'"
+          (click)="toggleFavorite($event)"
+          class="!absolute !bottom-3 !right-3 !z-10 !shadow-lg hover:!scale-110 !transition-transform"
+          [class.!bg-white]="!isFavorite()"
+          [matTooltip]="isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+          <mat-icon [class.text-pink-600]="isFavorite()">
+            {{ isFavorite() ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+        </button>
       </div>
 
       <!-- Card content -->
@@ -140,9 +156,27 @@ import { Camera } from '../models/camera.model';
 export class CameraCardComponent {
   @Input() camera!: Camera;
 
-  constructor(private router: Router) {}
+  // Computed signal pour vérifier si l'appareil est en favoris
+  isFavorite = computed(() => this.favoritesService.isFavorite(this.camera.id));
+
+  constructor(
+    private router: Router,
+    private favoritesService: FavoritesService
+  ) {}
 
   viewDetails() {
     this.router.navigate(['/camera', this.camera.id]);
+  }
+
+  toggleFavorite(event: Event) {
+    event.stopPropagation(); // Empêche la navigation vers les détails
+
+    if (this.isFavorite()) {
+      // Retirer des favoris
+      this.favoritesService.removeFavorite(this.camera.id);
+    } else {
+      // Ajouter aux favoris (passer l'objet Camera complet)
+      this.favoritesService.addFavorite(this.camera);
+    }
   }
 }

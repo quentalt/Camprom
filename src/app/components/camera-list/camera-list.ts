@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Camera } from '../models/camera.model';
-import { CameraService } from '../services/camera.service';
+import { Camera } from '../../models/camera.model';
+import { CameraService } from '../../services/camera.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';

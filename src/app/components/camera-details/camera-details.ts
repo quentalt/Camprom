@@ -1,9 +1,9 @@
-// `src/app/camera-detail/camera-detail.component.ts`
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Camera } from '../models/camera.model';
-import { CameraService } from '../services/camera.service';
+import { Camera } from '../../models/camera.model';
+import { CameraService } from '../../services/camera.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-camera-details',
@@ -24,7 +25,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSnackBarModule
   ],
   template: `
     <div class="min-h-screen bg-gray-100 py-8">
@@ -85,7 +87,7 @@ import { MatBadgeModule } from '@angular/material/badge';
                   <div class="mb-6">
                     <mat-chip-set>
                       <mat-chip class="!font-semibold">
-                        <mat-icon matChipAvatar class="!text-xl !w-5 !h5-">photo_camera</mat-icon>
+                        <mat-icon matChipAvatar class="!text-xl !w-5 !h-5">photo_camera</mat-icon>
                         {{ camera()!.megapixels }} MP
                       </mat-chip>
                       <mat-chip class="!font-semibold">
@@ -161,9 +163,15 @@ import { MatBadgeModule } from '@angular/material/badge';
 
                   <!-- Actions -->
                   <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                    <button mat-raised-button color="accent" class="!flex-1 !py-3 !px-6 !font-semibold !text-base">
-                      <mat-icon class="!mr-2">favorite</mat-icon>
-                      Ajouter aux favoris
+                    <button
+                      mat-raised-button
+                      [color]="isFavorite() ? 'warn' : 'accent'"
+                      (click)="toggleFavorite()"
+                      class="!flex-1 !py-3 !px-6 !font-semibold !text-base">
+                      <mat-icon class="!mr-2">
+                        {{ isFavorite() ? 'favorite' : 'favorite_border' }}
+                      </mat-icon>
+                      {{ isFavorite() ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
                     </button>
                   </div>
                 </mat-card-content>
@@ -195,10 +203,18 @@ export class CameraDetailsComponent implements OnInit {
   camera = signal<Camera | null>(null);
   isLoading = signal<boolean>(false);
 
+  // Computed signal pour vérifier si l'appareil est en favoris
+  isFavorite = computed(() => {
+    const cam = this.camera();
+    return cam ? this.favoritesService.isFavorite(cam.id) : false;
+  });
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private cameraService: CameraService
+    private cameraService: CameraService,
+    private favoritesService: FavoritesService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -214,6 +230,29 @@ export class CameraDetailsComponent implements OnInit {
       this.camera.set(camera || null);
       this.isLoading.set(false);
     });
+  }
+
+  toggleFavorite() {
+    const cam = this.camera();
+    if (!cam) return;
+
+    if (this.isFavorite()) {
+      // Retirer des favoris
+      this.favoritesService.removeFavorite(cam.id);
+      this.snackBar.open(`${cam.name} retiré des favoris`, 'OK', {
+        duration: 2000,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    } else {
+      // Ajouter aux favoris (passer l'objet Camera complet)
+      this.favoritesService.addFavorite(cam);
+      this.snackBar.open(`${cam.name} ajouté aux favoris`, 'OK', {
+        duration: 2000,
+        horizontalPosition: 'end',
+        verticalPosition: 'bottom'
+      });
+    }
   }
 
   goBack() {
