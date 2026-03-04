@@ -16,7 +16,6 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "proxyConfig": "proxy.conf.json",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -56,6 +55,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "camprom:build:production"
