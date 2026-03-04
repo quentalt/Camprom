@@ -1,4 +1,3 @@
-// `src/app/services/camera.service.ts`
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, of, tap } from 'rxjs';
