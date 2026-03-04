@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { Camera } from '../models/camera.model';
-import {environment} from '../environments/environment';
+import {environment} from '../environments/environment.production';
 
 @Injectable({
   providedIn: 'root'
@@ -52,13 +52,9 @@ export class CameraService {
 
   filterCameras(brand?: string, sortBy?: string): Observable<Camera[]> {
     this.isLoading.set(true);
-    let params: any = {};
-    if (brand) {
-      params.brand = brand;
-    }
-    if (sortBy) {
-      params.sortBy = sortBy;
-    }
+    let params = new HttpParams();
+    if (brand) params = params.set('brand', brand);
+    if (sortBy) params = params.set('sortBy', sortBy);
 
     return this.http.get<Camera[]>(`${this.apiUrl}/filter/search`, { params }).pipe(
       tap(cameras => {
